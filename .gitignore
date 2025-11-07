@@ -1,0 +1,15 @@
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# Test files
+test.html
+
+# Documentation
+javascript.md
+p5js.md
+
+# OS files
+.DS_Store
+Thumbs.db
