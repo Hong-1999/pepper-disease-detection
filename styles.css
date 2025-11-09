@@ -221,6 +221,65 @@ tbody tr:nth-child(even) {
   background: #fafafa;
 }
 
+/* Print button */
+.print-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+}
+
+.print-btn:hover {
+  background: var(--primary-dark);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-1px);
+}
+
+.print-btn:active {
+  transform: translateY(0);
+}
+
+/* Print styles */
+@media print {
+  header, .card:not(.print-section), .print-btn {
+    display: none !important;
+  }
+
+  .print-section {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .table-wrap {
+    border: none !important;
+  }
+
+  table {
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #f5f5f5 !important;
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   header h1 {
@@ -233,6 +292,11 @@ tbody tr:nth-child(even) {
 
   th, td {
     padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .print-btn {
+    padding: 8px 16px;
     font-size: 13px;
   }
 }

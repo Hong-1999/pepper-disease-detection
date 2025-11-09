@@ -19,6 +19,7 @@ const topKEl = el('topK');
 const recoInfoEl = el('recoInfo');
 const recoHeaderEl = el('recoHeader');
 const recoBodyEl = el('recoBody');
+const printBtn = el('printBtn');
 
 function setStatus(msg, type = 'info') {
   statusEl.textContent = msg || '';
@@ -143,6 +144,10 @@ function renderRecommendations(headers, rows) {
     td.textContent = '해당 조건에 맞는 추천 항목이 없습니다. (라벨/CSV 컬럼 확인 필요)';
     tr.appendChild(td);
     recoBodyEl.appendChild(tr);
+    printBtn.style.display = 'none';
+  } else {
+    // Show print button when there are recommendations
+    printBtn.style.display = 'inline-block';
   }
 }
 
@@ -233,10 +238,28 @@ function waitForLibraries() {
   });
 }
 
+// Print functionality
+function setupPrint() {
+  printBtn.addEventListener('click', () => {
+    // Add print-section class to the recommendation card
+    const recoCard = printBtn.closest('.card');
+    recoCard.classList.add('print-section');
+
+    // Trigger print
+    window.print();
+
+    // Remove print-section class after printing
+    setTimeout(() => {
+      recoCard.classList.remove('print-section');
+    }, 100);
+  });
+}
+
 // Boot
 window.addEventListener('DOMContentLoaded', async () => {
   console.log('DOM loaded');
   await waitForLibraries();
   setupUpload();
+  setupPrint();
   await loadCsv();
 });
