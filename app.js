@@ -154,13 +154,17 @@ function renderRecommendations(headers, rows) {
     td.textContent = '해당 조건에 맞는 추천 항목이 없습니다. (라벨/CSV 컬럼 확인 필요)';
     tr.appendChild(td);
     recoBodyEl.appendChild(tr);
-    exportBtn.style.display = 'none';
-    console.log('No recommendations, hiding export button');
+    if (exportBtn) {
+      exportBtn.style.display = 'none';
+      console.log('No recommendations, hiding export button');
+    }
   } else {
     // Show export button when there are recommendations
-    exportBtn.style.display = 'inline-block';
-    exportBtn.style.visibility = 'visible';
-    console.log('Recommendations found, showing export button');
+    if (exportBtn) {
+      exportBtn.style.display = 'inline-block';
+      exportBtn.style.visibility = 'visible';
+      console.log('Recommendations found, showing export button');
+    }
   }
 }
 
@@ -296,7 +300,11 @@ function exportToCSV() {
 }
 
 function setupExport() {
-  exportBtn.addEventListener('click', exportToCSV);
+  if (exportBtn) {
+    exportBtn.addEventListener('click', exportToCSV);
+  } else {
+    console.error('Export button not found!');
+  }
 }
 
 // Boot
