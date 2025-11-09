@@ -118,6 +118,8 @@ function filterRecommendations(diseaseLabel) {
 }
 
 function renderRecommendations(headers, rows) {
+  console.log('Rendering recommendations, rows:', rows.length);
+
   // Header
   recoHeaderEl.innerHTML = '';
   headers.forEach((h) => {
@@ -136,6 +138,8 @@ function renderRecommendations(headers, rows) {
     });
     recoBodyEl.appendChild(tr);
   });
+
+  // Show/hide print button based on recommendations
   if (!rows.length) {
     const tr = document.createElement('tr');
     const td = document.createElement('td');
@@ -145,9 +149,12 @@ function renderRecommendations(headers, rows) {
     tr.appendChild(td);
     recoBodyEl.appendChild(tr);
     printBtn.style.display = 'none';
+    console.log('No recommendations, hiding print button');
   } else {
     // Show print button when there are recommendations
     printBtn.style.display = 'inline-block';
+    printBtn.style.visibility = 'visible';
+    console.log('Recommendations found, showing print button');
   }
 }
 
