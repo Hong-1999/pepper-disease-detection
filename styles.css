@@ -221,8 +221,8 @@ tbody tr:nth-child(even) {
   background: #fafafa;
 }
 
-/* Print button */
-.print-btn {
+/* Export button */
+.export-btn {
   background: var(--primary);
   color: white;
   border: none;
@@ -235,13 +235,13 @@ tbody tr:nth-child(even) {
   box-shadow: var(--shadow);
 }
 
-.print-btn:hover {
+.export-btn:hover {
   background: var(--primary-dark);
   box-shadow: var(--shadow-lg);
   transform: translateY(-1px);
 }
 
-.print-btn:active {
+.export-btn:active {
   transform: translateY(0);
 }
 
@@ -295,7 +295,7 @@ tbody tr:nth-child(even) {
     font-size: 13px;
   }
 
-  .print-btn {
+  .export-btn {
     padding: 8px 16px;
     font-size: 13px;
   }

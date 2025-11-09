@@ -19,7 +19,10 @@ const topKEl = el('topK');
 const recoInfoEl = el('recoInfo');
 const recoHeaderEl = el('recoHeader');
 const recoBodyEl = el('recoBody');
-const printBtn = el('printBtn');
+const exportBtn = el('exportBtn');
+
+// Store current recommendations for export
+let currentRecommendations = { headers: [], rows: [] };
 
 function setStatus(msg, type = 'info') {
   statusEl.textContent = msg || '';
@@ -120,6 +123,9 @@ function filterRecommendations(diseaseLabel) {
 function renderRecommendations(headers, rows) {
   console.log('Rendering recommendations, rows:', rows.length);
 
+  // Store current recommendations for export
+  currentRecommendations = { headers, rows };
+
   // Header
   recoHeaderEl.innerHTML = '';
   headers.forEach((h) => {
@@ -139,7 +145,7 @@ function renderRecommendations(headers, rows) {
     recoBodyEl.appendChild(tr);
   });
 
-  // Show/hide print button based on recommendations
+  // Show/hide export button based on recommendations
   if (!rows.length) {
     const tr = document.createElement('tr');
     const td = document.createElement('td');
@@ -148,13 +154,13 @@ function renderRecommendations(headers, rows) {
     td.textContent = '해당 조건에 맞는 추천 항목이 없습니다. (라벨/CSV 컬럼 확인 필요)';
     tr.appendChild(td);
     recoBodyEl.appendChild(tr);
-    printBtn.style.display = 'none';
-    console.log('No recommendations, hiding print button');
+    exportBtn.style.display = 'none';
+    console.log('No recommendations, hiding export button');
   } else {
-    // Show print button when there are recommendations
-    printBtn.style.display = 'inline-block';
-    printBtn.style.visibility = 'visible';
-    console.log('Recommendations found, showing print button');
+    // Show export button when there are recommendations
+    exportBtn.style.display = 'inline-block';
+    exportBtn.style.visibility = 'visible';
+    console.log('Recommendations found, showing export button');
   }
 }
 
@@ -245,21 +251,52 @@ function waitForLibraries() {
   });
 }
 
-// Print functionality
-function setupPrint() {
-  printBtn.addEventListener('click', () => {
-    // Add print-section class to the recommendation card
-    const recoCard = printBtn.closest('.card');
-    recoCard.classList.add('print-section');
+// Export to CSV (Excel compatible) functionality
+function exportToCSV() {
+  const { headers, rows } = currentRecommendations;
 
-    // Trigger print
-    window.print();
+  if (!rows.length) {
+    alert('다운로드할 데이터가 없습니다.');
+    return;
+  }
 
-    // Remove print-section class after printing
-    setTimeout(() => {
-      recoCard.classList.remove('print-section');
-    }, 100);
+  // Create CSV content with UTF-8 BOM for Excel compatibility
+  const BOM = '\uFEFF';
+  const headerRow = headers.join(',');
+  const dataRows = rows.map(row => {
+    return headers.map(header => {
+      const value = normalizeStr(row[header]);
+      // Escape values containing comma, quotes, or newlines
+      if (value.includes(',') || value.includes('"') || value.includes('\n')) {
+        return `"${value.replace(/"/g, '""')}"`;
+      }
+      return value;
+    }).join(',');
   });
+
+  const csvContent = BOM + headerRow + '\n' + dataRows.join('\n');
+
+  // Create blob and download
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+
+  // Generate filename with current date
+  const date = new Date().toISOString().split('T')[0];
+  const prediction = predictionEl.textContent.replace('예측: ', '').split(' ')[0];
+  const filename = `권장농약_${prediction}_${date}.csv`;
+
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+function setupExport() {
+  exportBtn.addEventListener('click', exportToCSV);
 }
 
 // Boot
@@ -267,6 +304,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   console.log('DOM loaded');
   await waitForLibraries();
   setupUpload();
-  setupPrint();
+  setupExport();
   await loadCsv();
 });
