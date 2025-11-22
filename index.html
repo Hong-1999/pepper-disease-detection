@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>작물 병해 분석 & 농약 추천</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="container">
+      <h1>작물 병해 분석 & 농약 추천</h1>
+      <p class="muted">이미지를 업로드하면 모델이 병해를 분류하고, CSV 데이터를 기반으로 권장 농약을 제안합니다.</p>
+    </header>
+
+    <main class="container">
+      <!-- Top Row: Image Upload and Analysis Result -->
+      <div class="top-row">
+        <section class="card upload-section">
+          <h2>이미지 업로드</h2>
+          <p class="muted" style="margin-bottom: 12px;">고추 잎 또는 열매 사진을 선택하여 병해를 진단하세요</p>
+          <input id="fileInput" type="file" accept="image/*" aria-label="작물 병해 이미지 업로드" />
+          <div class="preview">
+            <img id="preview" alt="업로드 미리보기" />
+          </div>
+          <div id="status" class="status" role="status" aria-live="polite"></div>
+        </section>
+
+        <section class="card result-section">
+          <h2>분석 결과</h2>
+          <div id="prediction" class="prediction" role="region" aria-label="예측 결과"></div>
+          <ul id="topK" class="topk" aria-label="상위 예측 목록"></ul>
+        </section>
+      </div>
+
+      <!-- Disease Information Section -->
+      <section class="card disease-info-section">
+        <h2>병해충 정보</h2>
+        <div id="diseaseInfo" class="disease-info-content">
+          <p class="muted">이미지를 업로드하고 분석하면 해당 병해충에 대한 상세 정보가 여기에 표시됩니다.</p>
+        </div>
+      </section>
+
+      <!-- Recommendations Section -->
+      <section class="card">
+        <div class="row" style="justify-content: space-between; margin-bottom: 16px;">
+          <h2 style="margin: 0;">권장 농약</h2>
+          <button id="exportBtn" class="export-btn" style="display: none; visibility: hidden;">
+            📥 엑셀 다운로드
+          </button>
+        </div>
+        <div id="recoInfo" class="muted small" style="margin-bottom: 12px;"></div>
+        <div class="table-wrap">
+          <table id="recoTable">
+            <thead>
+              <tr id="recoHeader"></tr>
+            </thead>
+            <tbody id="recoBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Load libraries before app.js -->
+    <script src="libs/tf.min.js"></script>
+    <script src="libs/teachablemachine-image.min.js"></script>
+    <script src="libs/papaparse.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+  </html>
+
