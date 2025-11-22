@@ -89,18 +89,11 @@ h2 {
   border-left: 4px solid var(--warn);
 }
 
-/* Top Row Layout */
-.top-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
+/* Section Spacing */
 .upload-section,
-.result-section {
-  margin: 0;
-  height: 100%;
+.result-section,
+.disease-info-section {
+  margin: 20px 0;
 }
 
 /* Disease Information Section */
@@ -378,10 +371,6 @@ tbody tr:nth-child(even) {
   .export-btn {
     padding: 8px 16px;
     font-size: 13px;
-  }
-
-  .top-row {
-    grid-template-columns: 1fr;
   }
 }
 
